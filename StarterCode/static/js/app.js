@@ -17,6 +17,7 @@ init();
 
 var x = [];
 var y = [];
+var z = [];
 
 //use d3 to read json file
 d3.json("samples.json").then( data => { 
@@ -46,15 +47,17 @@ d3.json("samples.json").then( data => {
        //to the empty list x and y
         x.push(bar_data[i].sample_values);
         y.push(bar_data[i].otu_ids);
+        z.push(bar_data[i].otu_labels);
       };
-
+// prepare bar chart data for graphing
       trace = {
         x: x[1].slice(0,10).reverse(),
         y: y[1].slice(0,10).map(otuID => `OTU ${otuID}`),
+        hover_data: z[1].slice(0,10),
         type:'bar',
         orientation: 'h'
       };
-
+// bar chart layout
       var layout = {
           title: "Top 10 OTUs",
           xaxis: { title: "Sample Values" },
@@ -62,8 +65,24 @@ d3.json("samples.json").then( data => {
         };
       
       Plotly.newPlot("bar",[trace], layout);  
+//prepare bubble chart data for graphing
+trace2 = {
+  y: y[1].slice(0,10).map(otuID => `OTU ${otuID}`),
+  x: x[1].slice(0,10).reverse(),
+  text: z[1].slice(0,10),
+  mode:'markers', marker: {
+   
+    size:bar_data[1].sample_values,
+    color: bar_data[1].otu_ids
+  }
+};
+
+var layout2 = {
+    yaxis: { title: "Sample Values" },
+    xaxis: { title: "OTU IDs"}
+  };
+  Plotly.newPlot("bubble",[trace2], layout2); 
 });
-console.log(x);
 
 function optionChanged(name){
 
@@ -97,6 +116,7 @@ var map = d3.map(data);
       trace = {
         x: id_change[0].sample_values.slice(0,10).reverse(),
         y: id_change[0].otu_ids.slice(0,10).map(otuID => `OTU ${otuID}`),
+        hover_data: id_change[0].otu_labels.slice(0,10),
         type:'bar',
         orientation: 'h'
       };
@@ -108,5 +128,23 @@ var map = d3.map(data);
         };
       
       Plotly.newPlot("bar",[trace], layout);  
-})    
+
+      //bubble chart
+      trace2 = {
+        y: id_change[0].sample_values.slice(0,10).reverse(),
+        x: id_change[0].otu_ids.slice(0,10).map(otuID => `OTU ${otuID}`),
+        text: id_change[0].otu_labels.slice(0,10),
+        mode:'markers', marker: {
+         
+          size:id_change[0].sample_values,
+          color: id_change[0].otu_ids
+        }
+      };
+      var layout2 = {
+          yaxis: { title: "Sample Values" },
+          xaxis: { title: "OTU IDs"}
+        };
+      Plotly.newPlot("bubble",[trace2], layout2); 
+})
 };
+
