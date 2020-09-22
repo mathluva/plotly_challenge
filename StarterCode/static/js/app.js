@@ -1,6 +1,7 @@
+var demographic_info = d3.select("#sample-metadata");
 function init() {
   var dropdownMenu = d3.select("#selDataset");
-  var demographic_info = d3.select("sample-metadata");
+  var demographic_info = d3.select("#sample-metadata");
   // Assign the value of the dropdown menu option to a variable
   d3.json("samples.json").then( data => { 
   
@@ -16,8 +17,10 @@ function init() {
   
   })
   var dataset = dropdownMenu.property("value");
-  demographic_info.insert("hello").enter();
-console.log(id2);
+  
+  demographic_info.property("value");
+console.log(Object.entries(id2[0]));
+Object.entries(id2[0]).forEach(([key,value])=>{demographic_info.append("h6").text(`${key}: ${value}`)});
 
 
   });
@@ -32,6 +35,8 @@ var z = [];
 d3.json("samples.json").then( data => { 
   var dropdownMenu = d3.select("#selDataset");
   var dataset = dropdownMenu.property("value");
+  var demographic_info = d3.select("#sample-metadata")
+  var dataset2 = demographic_info.property("value");
 
   //map values to a variable called map
   var map = d3.map(data); 
@@ -101,8 +106,9 @@ function optionChanged(name){
   
 //     //map values to a variable called map
   var sample_info = data.metadata.filter((sample => sample.id == parseInt(name)))[0];
-
-      console.log(sample_info);
+  demographic_info.html("");
+  Object.entries(sample_info).forEach(([key,value])=>{demographic_info.append("h6").text(`${key}: ${value}`)});
+    console.log(sample_info);
 //rebuild new bar chart
 
 var map = d3.map(data); 
