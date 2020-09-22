@@ -1,17 +1,26 @@
 function init() {
   var dropdownMenu = d3.select("#selDataset");
+  var demographic_info = d3.select("sample-metadata");
   // Assign the value of the dropdown menu option to a variable
   d3.json("samples.json").then( data => { 
   
   var map = d3.map(data); 
   A2 = map.values();
-  console.log(A2[0].slice(0,10));
+  //console.log(A2[0].slice(0,10));
+ 
   var id = A2[0].slice(0,10);
+  var id2 = A2[1].slice(0,10);
+
   id.forEach(i => {
     dropdownMenu.append("option").text(i);
+  
   })
   var dataset = dropdownMenu.property("value");
-});
+  demographic_info.insert("hello").enter();
+console.log(id2);
+
+
+  });
 };
 init();
 
@@ -23,6 +32,7 @@ var z = [];
 d3.json("samples.json").then( data => { 
   var dropdownMenu = d3.select("#selDataset");
   var dataset = dropdownMenu.property("value");
+
   //map values to a variable called map
   var map = d3.map(data); 
        
@@ -82,6 +92,7 @@ var layout2 = {
     xaxis: { title: "OTU IDs"}
   };
   Plotly.newPlot("bubble",[trace2], layout2); 
+
 });
 
 function optionChanged(name){
